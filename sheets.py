@@ -3,14 +3,12 @@ from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
-from googleapiclient.errors import HttpError
 
 # If modifying these scopes, delete the file token.json.
 SCOPES = ["https://www.googleapis.com/auth/spreadsheets"]
 
 # The ID and range of a sample spreadsheet.
 SPREADSHEET_ID = "13nCB53t-9u4OnGV_js84XEXmyvN81rnzX0nSPtxkNDs"
-RANGE_NAME = "stock_history_DB!A1:F"
 
 
 def sheet_oauth():
@@ -38,23 +36,27 @@ def sheet_oauth():
     return creds
 
 
-def append_values():
+def append_values(values):
     creds = sheet_oauth()
+    range_name = "stock_history_DB!A1:F"
 
-    try:
-        service = build("sheets", "v4", credentials=creds)
-        service.spreadsheets().values().append(
-            spreadsheetId=SPREADSHEET_ID,
-            range=RANGE_NAME,
-            valueInputOption="USER_ENTERED",
-            body={"values": [[1, 1, 1, 1, 1, 1]]},
-        ).execute()
-        print("success")
-
-    except HttpError as error:
-        print(f"An error occurred: {error}")
-        return error
+    service = build("sheets", "v4", credentials=creds)
+    service.spreadsheets().values().append(
+        spreadsheetId=SPREADSHEET_ID,
+        range=range_name,
+        valueInputOption="USER_ENTERED",
+        body={"values": values},
+    ).execute()
 
 
-if __name__ == "__main__":
-    append_values()
+def append_logs(date, result, error, type, stock):
+    creds = sheet_oauth()
+    range_name = "logs!A1:E"
+
+    service = build("sheets", "v4", credentials=creds)
+    service.spreadsheets().values().append(
+        spreadsheetId=SPREADSHEET_ID,
+        range=range_name,
+        valueInputOption="USER_ENTERED",
+        body={"values": [[date, result, error, type, stock]]},
+    ).execute()

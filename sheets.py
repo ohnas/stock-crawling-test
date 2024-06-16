@@ -2,7 +2,7 @@ import os
 from google.oauth2.service_account import Credentials
 from googleapiclient.discovery import build
 
-SERVICE_ACCOUNT_FILE = os.path.join(os.getcwd(), "stock-crawling-test.json")
+SERVICE_ACCOUNT_FILE = os.path.join(os.getcwd(), "service-account.json")
 SCOPES = ["https://www.googleapis.com/auth/spreadsheets"]
 SPREADSHEET_ID = "13nCB53t-9u4OnGV_js84XEXmyvN81rnzX0nSPtxkNDs"
 

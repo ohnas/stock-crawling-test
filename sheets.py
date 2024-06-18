@@ -27,7 +27,7 @@ def append_values(values):
     ).execute()
 
 
-def append_logs(date, result, message, type, stock):
+def append_logs(date, result, message, type, platform):
     service = get_service()
     range_name = "logs!A1:E"
 
@@ -35,5 +35,5 @@ def append_logs(date, result, message, type, stock):
         spreadsheetId=SPREADSHEET_ID,
         range=range_name,
         valueInputOption="USER_ENTERED",
-        body={"values": [[date, result, message, type, stock]]},
+        body={"values": [[date, result, message, type, platform]]},
     ).execute()

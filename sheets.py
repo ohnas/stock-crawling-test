@@ -1,15 +1,26 @@
 import os
+import base64
+import json
+from dotenv import load_dotenv
 from google.oauth2.service_account import Credentials
 from googleapiclient.discovery import build
 
-SERVICE_ACCOUNT_FILE = os.path.join(os.getcwd(), "service-account.json")
+load_dotenv()
+
+SERVICE_ACCOUNT_KEY = os.environ.get("SERVICE_ACCOUNT_KEY")
 SCOPES = ["https://www.googleapis.com/auth/spreadsheets"]
-SPREADSHEET_ID = "13nCB53t-9u4OnGV_js84XEXmyvN81rnzX0nSPtxkNDs"
+SPREADSHEET_ID = os.environ.get("SPREADSHEET_ID")
 
 
 def get_service():
-    credentials = Credentials.from_service_account_file(
-        SERVICE_ACCOUNT_FILE, scopes=SCOPES
+    service_account_key_base64 = SERVICE_ACCOUNT_KEY
+    service_account_key_json = base64.b64decode(service_account_key_base64).decode(
+        "utf-8"
+    )
+    service_account_info = json.loads(service_account_key_json)
+
+    credentials = Credentials.from_service_account_info(
+        service_account_info, scopes=SCOPES
     )
     service = build("sheets", "v4", credentials=credentials)
     return service

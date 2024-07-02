@@ -167,3 +167,6 @@ token.json
 
 #GCP service account key
 service-account.json
+
+# env
+.env

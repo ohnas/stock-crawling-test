@@ -8,52 +8,52 @@ stocks = [
     {
         "name": "VANGUARD S&P 500 ETF",
         "code": "VOO",
-        "url": "https://kr.investing.com/etfs/vanguard-s-p-500",
+        "url": "https://www.google.com/finance/quote/VOO:NYSEARCA",
     },
     {
         "name": "테슬라",
         "code": "TSLA",
-        "url": "https://kr.investing.com/equities/tesla-motors",
+        "url": "https://www.google.com/finance/quote/TSLA:NASDAQ",
     },
     {
         "name": "마이크로스포트",
         "code": "MSFT",
-        "url": "https://kr.investing.com/equities/microsoft-corp",
+        "url": "https://www.google.com/finance/quote/MSFT:NASDAQ",
     },
     {
         "name": "코스트코 홀세일",
         "code": "COST",
-        "url": "https://kr.investing.com/equities/costco-whsl-corp-new",
+        "url": "https://www.google.com/finance/quote/COST:NASDAQ",
     },
     {
         "name": "엔비디아",
         "code": "NVDA",
-        "url": "https://kr.investing.com/equities/nvidia-corp",
+        "url": "https://www.google.com/finance/quote/NVDA:NASDAQ",
     },
     {
         "name": "메타 플랫폼스(페이스북)",
         "code": "META",
-        "url": "https://kr.investing.com/equities/facebook-inc",
+        "url": "https://www.google.com/finance/quote/META:NASDAQ",
     },
     {
         "name": "애플",
         "code": "AAPL",
-        "url": "https://kr.investing.com/equities/apple-computer-inc",
+        "url": "https://www.google.com/finance/quote/AAPL:NASDAQ",
     },
     {
         "name": "알파벳 A",
         "code": "GOOGL",
-        "url": "https://kr.investing.com/equities/google-inc",
+        "url": "https://www.google.com/finance/quote/GOOGL:NASDAQ",
     },
     {
         "name": "아마존닷컴",
         "code": "AMZN",
-        "url": "https://kr.investing.com/equities/amazon-com-inc",
+        "url": "https://www.google.com/finance/quote/AMZN:NASDAQ",
     },
     {
         "name": "팔란티어 테크",
         "code": "PLTR",
-        "url": "https://kr.investing.com/equities/palantir-technologies-inc",
+        "url": "https://www.google.com/finance/quote/PLTR:NYSE",
     },
 ]
 
@@ -69,18 +69,19 @@ for stock in stocks:
         response.raise_for_status()
         html = response.text
         soup = BeautifulSoup(html, "html.parser")
-        div = soup.find("div", {"data-test": "instrument-price-last"})
-        previous_close = div.text
+        div = soup.find("div", {"class": "fxKbKc"})
+        price = div.text
+        previous_close = price.replace("$", "")
         values = [
             [stock["name"], stock["code"], YESTERDAY, previous_close, "나스닥", "USD"]
         ]
         append_values(values)
         append_logs(YESTERDAY, "success", "-", "crawling", stock["code"])
     except requests.exceptions.HTTPError as http_err:
-        append_logs(YESTERDAY, "fail", http_err, "HTTPError", stock["code"])
+        append_logs(YESTERDAY, "fail", str(http_err), "HTTPError", stock["code"])
     except requests.exceptions.RequestException as req_err:
-        append_logs(YESTERDAY, "fail", req_err, "ReQuestException", stock["code"])
+        append_logs(YESTERDAY, "fail", str(req_err), "ReQuestException", stock["code"])
     except Exception as err:
-        append_logs(YESTERDAY, "fail", err, "Exception", stock["code"])
+        append_logs(YESTERDAY, "fail", str(err), "Exception", stock["code"])
     finally:
         time.sleep(1)

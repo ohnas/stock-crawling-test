@@ -55,6 +55,11 @@ stocks = [
         "code": "PLTR",
         "url": "https://www.google.com/finance/quote/PLTR:NYSE",
     },
+    {
+        "name": "AMD",
+        "code": "AMD",
+        "url": "https://www.google.com/finance/quote/AMD:NASDAQ",
+    },
 ]
 
 HEADERS = {
